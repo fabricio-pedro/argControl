@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,10 @@ public class CategoriaResource {
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Categoria buscaCategoria(@PathVariable Long id) {
+		
+		ResponseEntity<?> resp=new ResponseEntity<>(HttpStatus.OK);
+	
+		
 		StringBuilder messageBuilder = new StringBuilder();
 		Optional<Categoria> catOp=catS.buscarPor(id);
 		if(catOp.isEmpty()) {
@@ -35,7 +40,7 @@ public class CategoriaResource {
 		  .append(" com id:")
 		  .append(id)
 		  .append(" não foi encontrado");
-		}
+		}	
 		return catOp.orElseThrow(()->new ResourceException(HttpStatus.NOT_FOUND, messageBuilder.toString()) );
 			
 		

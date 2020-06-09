@@ -12,11 +12,13 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
 
 @Entity
 public class Cliente {
@@ -24,6 +26,7 @@ public class Cliente {
  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)	
  private Long id;
  private String nome;
+ @Email
  private String email;
  private String cnpjOuCpf;
  @Enumerated(EnumType.ORDINAL)
@@ -34,11 +37,21 @@ public class Cliente {
  private Set<String> telefones=new HashSet<>();	
  @OneToMany(mappedBy="cliente", cascade = CascadeType.ALL)
  private List<Endereco> enderecos=new ArrayList<>();
- @OneToMany(mappedBy = "cliente")
+ @OneToMany(mappedBy = "cliente",fetch = FetchType.LAZY)
  private List<Pedido> pedidos=new ArrayList<>();
+ public Cliente() {
+	// TODO Auto-generated constructor stub
+}
  
- 
- public Long getId() {
+ public Cliente(Long id, String nome, @Email String email, String cnpjOuCpf, int tipoCliente) {
+	super();
+	this.id = id;
+	this.nome = nome;
+	this.email = email;
+	this.cnpjOuCpf = cnpjOuCpf;
+	this.tipoCli = TipoCliente.toEnum(tipoCliente);
+}
+public Long getId() {
 	return id;
  }
  public void setId(Long id) {
@@ -92,6 +105,20 @@ public void addEndereco(Endereco end) {
 public void addPedido(Pedido ped) {
   this.pedidos.add(ped);	
 	
-} 
- 
+}
+
+public void removePedido(Pedido ped) {
+	this.pedidos.remove(ped);
+}
+
+public void addtelefone(String tel) {
+this.telefones.add(tel);	
+}
+
+public void removeTelefone(String tel){
+	
+	
+	
+}
+
 }

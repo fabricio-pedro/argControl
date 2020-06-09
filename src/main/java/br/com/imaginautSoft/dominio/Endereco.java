@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Endereco implements Serializable {
 
@@ -25,6 +27,7 @@ private static final long serialVersionUID = -3673249199822631482L;
  @ManyToOne
  @JoinColumn(name="cidade_id")
  private Cidade cidade;
+ @JsonIgnore
  @ManyToOne
  @JoinColumn(name="cliente_id")
  private Cliente cliente;
