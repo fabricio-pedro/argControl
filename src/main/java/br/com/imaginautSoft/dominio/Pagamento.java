@@ -21,6 +21,7 @@ public class Pagamento implements Serializable {
 	@Id 
 	private Long id;
 	private EstadoDePagamento estadoPg;
+	
 	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name="pedido_id")

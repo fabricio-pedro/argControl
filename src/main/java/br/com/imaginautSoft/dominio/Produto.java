@@ -101,7 +101,7 @@ public class Produto implements Serializable {
 	}
 
 
-
+   
 	public Set<ItemPedido> getItens() {
 		return itens;
 	}

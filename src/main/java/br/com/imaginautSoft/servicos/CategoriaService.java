@@ -23,7 +23,12 @@ public class CategoriaService {
 	
 		
 	}
-	
+	public Categoria inserir(Categoria cat){
+	 cat.setId(null); 
+	 Categoria categoria=  this.catRep.save(cat);
+	 return categoria;	
+	  
+	}
 	
 	
 	
