@@ -3,9 +3,8 @@ package br.com.imaginautSoft.repositorios;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.imaginautSoft.dominio.Cliente;
-
+import br.com.imaginautSoft.dominio.Pedido;
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente,Long> {
+public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
 }

@@ -1,8 +1,11 @@
 package br.com.imaginautSoft.actions;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +14,17 @@ import br.com.imaginautSoft.dominio.Cidade;
 import br.com.imaginautSoft.dominio.Cliente;
 import br.com.imaginautSoft.dominio.Endereco;
 import br.com.imaginautSoft.dominio.Estado;
+import br.com.imaginautSoft.dominio.EstadoDePagamento;
+import br.com.imaginautSoft.dominio.ItemPedido;
+import br.com.imaginautSoft.dominio.Pagamento;
+import br.com.imaginautSoft.dominio.PagamentoComBoleto;
+import br.com.imaginautSoft.dominio.Pedido;
 import br.com.imaginautSoft.dominio.Produto;
 import br.com.imaginautSoft.repositorios.CategoriaRepository;
 import br.com.imaginautSoft.repositorios.CidadeRepository;
 import br.com.imaginautSoft.repositorios.ClienteRepository;
 import br.com.imaginautSoft.repositorios.EstadoRepository;
+import br.com.imaginautSoft.repositorios.PedidoRepository;
 import br.com.imaginautSoft.repositorios.ProdutoRepository;
 
 @Component
@@ -26,13 +35,15 @@ public class SeedInit implements CommandLineRunner {
 	private final CidadeRepository cidRep;
 	private final EstadoRepository estRep;
 	private final ClienteRepository cliRep;
-	public SeedInit(CategoriaRepository repo, ProdutoRepository prodRep, CidadeRepository cidRep, EstadoRepository estRep, ClienteRepository cliRep) {
+	private final PedidoRepository pedRep;
+	public SeedInit(CategoriaRepository repo, ProdutoRepository prodRep, CidadeRepository cidRep, EstadoRepository estRep, ClienteRepository cliRep, PedidoRepository pedRep) {
 		// TODO Auto-generated constructor stub
 		this.catRep=repo;
 		this.prodRep=prodRep;
 		this.cidRep=cidRep;
 		this.estRep=estRep;
 		this.cliRep=cliRep;
+		this.pedRep=pedRep;
 	}
 	
 	@Override
@@ -42,6 +53,7 @@ public class SeedInit implements CommandLineRunner {
 		saveCatProdut();
 		saveCidadesEstados();
 		saveClienteEndereco();
+    	savePedido();
 	}
 	private void saveCatProdut() {
 	  	Categoria cat1=new Categoria(null, "informatica");
@@ -84,5 +96,25 @@ public class SeedInit implements CommandLineRunner {
 	    cli.addEndereco(end2);
 	    this.cliRep.save(cli);
   }
+  private void savePedido() {
+	  Cliente cliente=this.cliRep.findById(1l).get();
+	  Produto prod=this.prodRep.findById(1l).get();
+	  Optional<Estado> estadoCliEstado=this.estRep.findById(1l);
+	  Cidade cid=estadoCliEstado.get().getCidades().get(0);
+	  Endereco endEnt=new Endereco(null, "Avenida Faria Pereira", "4580", "casa", "Sao francisco", "387400", cid);
+      Pedido ped=new Pedido();
+      ped.setCliente(cliente);
+      ped.setEnderecoDeEntrega(endEnt);
+      ped.setInstante(LocalDateTime.now());
+      
+      PagamentoComBoleto pc=new PagamentoComBoleto(null,EstadoDePagamento.PEDENTE,ped);
+      pc.setDataPagamento(LocalDate.now());
+      pc.setDataVencimento(LocalDate.now());
+      ped.setPagamento(pc);
+      ItemPedido item=new ItemPedido(prod, ped, 0.25, 15, 10.5);
+      ped.additemDePedido(item);
+      this.pedRep.save(ped);
+      
+  } 
 
 }

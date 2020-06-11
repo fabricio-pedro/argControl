@@ -20,6 +20,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Cliente {
 
@@ -37,6 +39,7 @@ public class Cliente {
  private Set<String> telefones=new HashSet<>();	
  @OneToMany(mappedBy="cliente", cascade = CascadeType.ALL)
  private List<Endereco> enderecos=new ArrayList<>();
+ @JsonIgnore
  @OneToMany(mappedBy = "cliente",fetch = FetchType.LAZY)
  private List<Pedido> pedidos=new ArrayList<>();
  public Cliente() {
