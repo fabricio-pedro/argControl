@@ -18,7 +18,7 @@ public class PedidoService {
 		this.pedRep = pedRep;
 	}
 	
-	public Optional<Pedido> buscarPor(Long id) {
+	public Optional<Pedido> find(Long id) {
 		Optional<Pedido> pedido=pedRep.findById(id);
 		return pedido;
 	

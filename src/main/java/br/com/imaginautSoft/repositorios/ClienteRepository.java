@@ -8,4 +8,5 @@ import br.com.imaginautSoft.dominio.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente,Long> {
 
+  public Cliente findByEmail(String email);	
 }

@@ -29,7 +29,7 @@ public class PedidoResource {
 	@ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Pedido findPedido (@PathVariable("id")Long id) {
-		Optional<Pedido> pedOpt=this.pedServ.buscarPor(id);
+		Optional<Pedido> pedOpt=this.pedServ.find(id);
 	    StringBuilder msgError = new StringBuilder();
 	    if(pedOpt.isEmpty()) {
 	     msgError.append("O recurso ")

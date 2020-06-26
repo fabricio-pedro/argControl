@@ -10,31 +10,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import br.com.imaginautSoft.exceptions.ResourceException;
+import br.com.imaginautSoft.exceptions.DataIntregrityException;
 import br.com.imaginautSoft.exceptions.JsonError;
+import br.com.imaginautSoft.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionsHandler {
   
-	  @ExceptionHandler
-	  public ResponseEntity<JsonError> handleNumberFormatException(HttpServletRequest req,Exception e){
-		 String errorURL=req.getRequestURL().toString();
-		 System.out.println("Essa exceção e: "+ (e instanceof NumberFormatException));
-		 if ( e instanceof MethodArgumentTypeMismatchException) {
-		  return new ResponseEntity<>(new  JsonError(errorURL," o id informado está no formato inválido, nao é permito letras!"),HttpStatus.BAD_REQUEST); 	
-	  }else { 
-		return new ResponseEntity<>(new  JsonError(errorURL,
-		           "Unexpected Exception: " + e.getMessage()),
-		           HttpStatus.INTERNAL_SERVER_ERROR);	
-	  }
-	 }
 	
-	  @ExceptionHandler(ResourceException.class)
+	  @ExceptionHandler(ObjectNotFoundException.class)
 	  @ResponseBody
-	  public ResponseEntity<JsonError> handleException(HttpServletRequest req, ResourceException ex){
+	  public ResponseEntity<JsonError> handleObjectException(HttpServletRequest req, ObjectNotFoundException ex){
 		  String errorUrl=req.getRequestURL().toString(); 
-	    	return new ResponseEntity<>(new JsonError(errorUrl, ex.getMessage()), ex.getStatus());
+		   JsonError jsonError=new JsonError(errorUrl, ex.getMessage());
+	    	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonError);
 	   }
-	      
+
+	  @ExceptionHandler(DataIntregrityException.class)
+	  @ResponseBody
+	  public ResponseEntity<JsonError> handleDataIntegratyException(HttpServletRequest req, DataIntregrityException ex){
+	       String errorUrl=req.getRequestURL().toString(); 
+		   JsonError jsonError=new JsonError(errorUrl, ex.getMessage());
+	    	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonError);
+	   }   
 		  
 	  
 	      

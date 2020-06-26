@@ -27,9 +27,9 @@ public class ClienteResource {
 	}
 	
 	@GetMapping(path="/{id}",produces = MediaType.APPLICATION_JSON_VALUE )
-	public Cliente buscaCliente (@PathVariable Long id){
+	public Cliente findOne (@PathVariable Long id){
 	    StringBuilder msgError=new StringBuilder();	
-        Optional<Cliente> clienteOp=cliServ.BuscaCliente(id);
+        Optional<Cliente> clienteOp=cliServ.find(id);
         if(clienteOp.isEmpty()) {
         	msgError.append("O recurso ")
         	.append(Cliente.class.getSimpleName())
