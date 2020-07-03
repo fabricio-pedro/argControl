@@ -2,6 +2,10 @@ package br.com.imaginautSoft.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
 public class CategoriaDTO implements Serializable {
 
 	/**
@@ -10,6 +14,8 @@ public class CategoriaDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
   
 	private Long id;
+	@NotEmpty(message = "O campo tem preechimento obrigatório")
+	@Length(min=5, max = 80)
 	private String nome;
 	
 	public CategoriaDTO() {

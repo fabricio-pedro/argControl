@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,10 @@ import br.com.imaginautSoft.servicos.CategoriaService;
 @RequestMapping("/categorias")
 public class CategoriaResource {
    
-	private final ModelMapper mapper;
+
 	private final CategoriaService catS;
-	public CategoriaResource(CategoriaService catS, ModelMapper mapper) {
-		this.mapper=mapper;
+	public CategoriaResource(CategoriaService catS) {
+		
 		this.catS=catS;
 		// TODO Auto-generated constructor stub
 	}
@@ -44,7 +45,8 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Void>  insert(@RequestBody Categoria cat){
+	public ResponseEntity<Void>  insert(@Valid  @RequestBody CategoriaDTO catDto){
+	Categoria cat=this.catS.fromCategoriaDTO(catDto);
 	Categoria categoria=this.catS.insert(cat);
 	URI uri=ServletUriComponentsBuilder.fromCurrentRequest()
 		    .path("/{id}").buildAndExpand(categoria.getId()).toUri();
@@ -55,9 +57,10 @@ public class CategoriaResource {
 	}
 
   @PutMapping(path = "/{id}")	
-  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody Categoria cat){
-    Categoria categoria=cat;
-    cat.setId(id);
+  public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody CategoriaDTO catDto){
+    
+	Categoria categoria=this.catS.fromCategoriaDTO(catDto);
+    categoria.setId(id);
     this.catS.update(categoria);
     return ResponseEntity.noContent().build();
 	  
@@ -70,7 +73,7 @@ public class CategoriaResource {
 		List<CategoriaDTO> catPro=new ArrayList<>();
 		
 		for(Categoria cat:categorias ) {
-			CategoriaDTO catP= this.mapper.map(cat, CategoriaDTO.class);
+			CategoriaDTO catP= this.catS.fromCategoria(cat);
 			catPro.add(catP);
 		}
 		
@@ -92,7 +95,7 @@ public class CategoriaResource {
 			@RequestParam(value="orderBy", defaultValue="nome") String orderBy, 
 			@RequestParam(value="direction", defaultValue="ASC") String direction) {
 		Page<Categoria> list = catS.findPage(page, linesPerPage, orderBy, direction);
-		Page<CategoriaDTO> listDto = list.map(cat-> this.mapper.map(cat, CategoriaDTO.class));
+		Page<CategoriaDTO> listDto = list.map(cat-> this.catS.fromCategoria(cat));
 		
 		return ResponseEntity.ok().body(listDto);
 	

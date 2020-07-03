@@ -8,8 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-
+import org.modelmapper.ModelMapper;
 import br.com.imaginautSoft.dominio.Categoria;
+import br.com.imaginautSoft.dto.CategoriaDTO;
 import br.com.imaginautSoft.exceptions.DataIntregrityException;
 import br.com.imaginautSoft.exceptions.ObjectNotFoundException;
 import br.com.imaginautSoft.repositorios.CategoriaRepository;
@@ -18,10 +19,11 @@ import br.com.imaginautSoft.repositorios.CategoriaRepository;
 public class CategoriaService {
 
 	private final CategoriaRepository catRep;
-
-	public CategoriaService(CategoriaRepository catRep) {
+    private final ModelMapper mapper;
+	public CategoriaService(CategoriaRepository catRep, ModelMapper mapper) {
 		super();
 		this.catRep = catRep;
+		this.mapper=mapper;
 	}
 	
 	public Optional<Categoria> findBy(Long id) {
@@ -68,4 +70,11 @@ public class CategoriaService {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 	    return this.catRep.findAll(pageRequest);    
 	}
+  public Categoria fromCategoriaDTO(CategoriaDTO catDTO) {
+	  return this.mapper.map(catDTO, Categoria.class);
+	  
+  }
+  public CategoriaDTO fromCategoria(Categoria cat) {
+	  return this.mapper.map(cat, CategoriaDTO.class);
+  }
 }
